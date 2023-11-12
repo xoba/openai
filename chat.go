@@ -169,7 +169,7 @@ func Chat(c *Client) error {
 				})
 			}
 		default:
-			content := r.Choices[0].Message.Content
+			content := choice.Message.Content
 			if !chatRequest.Stream {
 				fmt.Print(content)
 			}

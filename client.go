@@ -28,10 +28,15 @@ type Client struct {
 	secretKey string
 }
 
+// new client; if secret key is empty, it will try env var OPENAI_SECRET_KEY
 func NewClient(secretKey string) (*Client, error) {
+	if len(secretKey) == 0 {
+		secretKey = os.Getenv("OPENAI_SECRET_KEY")
+	}
 	return &Client{secretKey: strings.TrimSpace(secretKey)}, nil
 }
 
+// new client using secret key from file
 func NewClientFilename(filename string) (*Client, error) {
 	buf, err := os.ReadFile(filename)
 	if err != nil {
