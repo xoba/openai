@@ -1,4 +1,4 @@
-module xoba.com/openai
+module github.com/xoba/openai
 
 go 1.21.4
 

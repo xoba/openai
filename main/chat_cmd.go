@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"xoba.com/openai"
+	"github.com/xoba/openai"
 )
 
 func main() {
