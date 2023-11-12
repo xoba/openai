@@ -1,0 +1,13 @@
+{
+    "files.exclude": {
+        "**/*.gz": true,
+        "**/*~": true,
+        "**/.DS_Store": true,
+        "**/.git": true,
+        "**/log*.txt": true,
+        "cache_dir": true,
+        "go.sum": true,
+        "images": true,
+        "openai_*.txt": true
+    }
+}
