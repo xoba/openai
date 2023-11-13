@@ -44,6 +44,7 @@ func Chat(c *Client) error {
 	add(&Command{})
 	add(&SquareRoot{})
 	add(&RandomJoke{})
+	add(&FictionalMessage{})
 	add(&TextSorter{})
 	add(&NumberSorter{})
 	add(&FileCreation{})
