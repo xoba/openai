@@ -31,5 +31,5 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	return openai.Chat(c)
+	return openai.Chat(c, "remember, don't repeat a command's output if you've already echoed it to the user's terminal.")
 }

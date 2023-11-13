@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func Chat(c *Client) error {
+func Chat(c *Client, prompts ...string) error {
 
 	var messages []Message
 
@@ -18,9 +18,16 @@ func Chat(c *Client) error {
 		Content: `you are a helpful assistant. 
 		if the user asks about his machine or system, you have a function which can execute commands and should use it safely without harming his system.
 		generally prefer using python3 for any calculations, running scripts you first create (or edit) in the /tmp/ filesystem. install whatever libraries
-		are necessary.
+		are necessary. when running commands, you can optionally echo the command's output to the user's terminal,
+		in which case, there's no need to repeat that output yourself.
 		`,
 	})
+	for _, p := range prompts {
+		messages = append(messages, Message{
+			Role:    "user",
+			Content: p,
+		})
+	}
 
 	reader := bufio.NewReader(os.Stdin)
 
