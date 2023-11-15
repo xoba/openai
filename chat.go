@@ -55,6 +55,9 @@ func Chat(c *Client, prompts ...string) error {
 	add(&TextSorter{})
 	add(&NumberSorter{})
 	add(&FileCreation{})
+	add(&StartREPL{})
+	add(&REPLRound{})
+	add(&StopREPL{})
 
 	for {
 
