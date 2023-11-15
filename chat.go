@@ -58,6 +58,7 @@ func Chat(c *Client, prompts ...string) error {
 	add(&StartREPL{})
 	add(&REPLRound{})
 	add(&StopREPL{})
+	add(&YoutubeViewModel{})
 
 	for {
 
