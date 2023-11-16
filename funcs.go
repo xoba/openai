@@ -157,11 +157,17 @@ func (s *Command) Clear() {
 	*s = Command{}
 }
 
+// inherits the environment, essential for python
+func NewCommand(exe string, args ...string) *exec.Cmd {
+	cmd := exec.Command(exe, args...)
+	cmd.Env = os.Environ()
+	return cmd
+}
+
 func (s Command) Run() (string, error) {
 	stdout := new(bytes.Buffer)
 	stderr := new(bytes.Buffer)
-	cmd := exec.Command("bash", "-c", s.Line)
-	cmd.Env = os.Environ()
+	cmd := NewCommand("bash", "-c", s.Line)
 	cmd.Stderr = stderr
 	cmd.Stdout = stdout
 	var runError string

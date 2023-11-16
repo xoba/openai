@@ -30,8 +30,7 @@ func (s *StartREPL) Clear() {
 }
 
 func (s StartREPL) Run() (string, error) {
-	cmd := exec.Command("python3", "-i", "-u")
-	cmd.Env = os.Environ()
+	cmd := NewCommand("python3", "-i", "-u")
 	s.cmd = cmd
 	r, w := io.Pipe()
 	cmd.Stdout = w
