@@ -3,3 +3,4 @@ openai_personal.txt
 *.webp
 *.py
 *.zip
+.env

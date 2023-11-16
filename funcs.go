@@ -161,6 +161,7 @@ func (s Command) Run() (string, error) {
 	stdout := new(bytes.Buffer)
 	stderr := new(bytes.Buffer)
 	cmd := exec.Command("bash", "-c", s.Line)
+	cmd.Env = os.Environ()
 	cmd.Stderr = stderr
 	cmd.Stdout = stdout
 	var runError string
