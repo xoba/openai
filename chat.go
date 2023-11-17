@@ -171,7 +171,7 @@ func Chat(c *Client, prompts ...string) error {
 				}
 				c, err := f.Run()
 				if err != nil {
-					return fmt.Errorf("can't run %q: %w\n", t.FunctionCall.Name, err)
+					return fmt.Errorf("can't run %q: %w", t.FunctionCall.Name, err)
 				}
 				messages = append(messages, Message{
 					Role:       "tool",

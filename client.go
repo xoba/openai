@@ -254,7 +254,7 @@ func (d DalleResponse) String() string {
 	return toString(d)
 }
 
-func dalle(c *Client) error {
+func Dalle(c *Client) error {
 	var out DalleResponse
 	if err := c.Post("images/generations", ImageRequest{
 		Prompt:         "show me the ocean in coney island, with the beach, bathers, amusement park, and with an airplane in the distance. show the full moon in the sky.",
@@ -320,7 +320,7 @@ func LoadModels(c *Client) (*ModelResponse, error) {
 	return &list, nil
 }
 
-func loadImage(filename string) (*Content, error) {
+func LoadImage(filename string) (*Content, error) {
 	xoba, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err

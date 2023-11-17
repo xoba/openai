@@ -49,7 +49,6 @@ func (c *Client) Streaming(model string, messages []Message, stream io.Writer) (
 		return nil, fmt.Errorf("bad number of choices: %d", len(r.Choices))
 	}
 	choice := r.Choices[0]
-	messages = append(messages, choice.Message)
 	return &Response{
 		Content:      choice.Message.Content,
 		FinishReason: choice.FinishReason,
