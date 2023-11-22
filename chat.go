@@ -26,7 +26,12 @@ func Chat(c *Client, prompts ...string) error {
 			Content: p,
 		})
 	}
-	return ChatWithOptions(c, StandardFuncs(), messages)
+	o := ChatOptions{
+		Functions:      StandardFuncs(),
+		Messages:       messages,
+		ResponseFormat: "text",
+	}
+	return ChatWithOptions(c, &o)
 }
 
 func StandardFuncs() (out []FunctionI) {
@@ -49,7 +54,13 @@ func StandardFuncs() (out []FunctionI) {
 	return
 }
 
-func ChatWithOptions(c *Client, functionList []FunctionI, messages []Message) error {
+type ChatOptions struct {
+	Functions      []FunctionI
+	Messages       []Message
+	ResponseFormat string // text or json_object
+}
+
+func ChatWithOptions(c *Client, o *ChatOptions) error {
 
 	reader := bufio.NewReader(os.Stdin)
 
@@ -68,14 +79,14 @@ func ChatWithOptions(c *Client, functionList []FunctionI, messages []Message) er
 		}
 		funcs[name] = f
 	}
-	for _, f := range functionList {
+	for _, f := range o.Functions {
 		add(f)
 	}
 
 	for {
 
 		if false {
-			buf, _ := json.MarshalIndent(messages, "", "  ")
+			buf, _ := json.MarshalIndent(o.Messages, "", "  ")
 			fmt.Printf("messages: %s\n", string(buf))
 		}
 
@@ -94,7 +105,7 @@ func ChatWithOptions(c *Client, functionList []FunctionI, messages []Message) er
 				continue
 			}
 
-			messages = append(messages, Message{
+			o.Messages = append(o.Messages, Message{
 				Role:    "user",
 				Content: text,
 			})
@@ -111,7 +122,7 @@ func ChatWithOptions(c *Client, functionList []FunctionI, messages []Message) er
 			//Model: "gpt-4",
 			//Model: "gpt-4-vision-preview",
 			Model:       "gpt-4-1106-preview",
-			Messages:    messages,
+			Messages:    o.Messages,
 			Temperature: 0.7,
 		}
 
@@ -168,7 +179,7 @@ func ChatWithOptions(c *Client, functionList []FunctionI, messages []Message) er
 		}
 
 		choice := r.Choices[0]
-		messages = append(messages, choice.Message)
+		o.Messages = append(o.Messages, choice.Message)
 		switch choice.FinishReason {
 		case "tool_calls":
 			toolCall = true
@@ -185,7 +196,7 @@ func ChatWithOptions(c *Client, functionList []FunctionI, messages []Message) er
 				if err != nil {
 					return fmt.Errorf("can't run %q: %w", t.FunctionCall.Name, err)
 				}
-				messages = append(messages, Message{
+				o.Messages = append(o.Messages, Message{
 					Role:       "tool",
 					ToolCallID: t.ID,
 					Name:       t.FunctionCall.Name,
