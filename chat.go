@@ -116,8 +116,7 @@ func ChatWithOptions(c *Client, o *ChatOptions) error {
 		chatRequest := ChatRequest{
 			Stream: true,
 			ResponseFormat: &ResponseFormat{
-				Type: "text",
-				//Type: "json_object",
+				Type: o.ResponseFormat,
 			},
 			//Model: "gpt-4",
 			//Model: "gpt-4-vision-preview",
