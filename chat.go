@@ -10,9 +10,7 @@ import (
 )
 
 func Chat(c *Client, prompts ...string) error {
-
 	var messages []Message
-
 	messages = append(messages, Message{
 		Role: "system",
 		Content: `you are a helpful assistant. 
@@ -28,6 +26,30 @@ func Chat(c *Client, prompts ...string) error {
 			Content: p,
 		})
 	}
+	return ChatWithOptions(c, StandardFuncs(), messages)
+}
+
+func StandardFuncs() (out []FunctionI) {
+	add := func(f FunctionI) {
+		out = append(out, f)
+	}
+	add(&SummationRequest{})
+	add(&ProductRequest{})
+	add(&Command{})
+	add(&SquareRoot{})
+	add(&RandomJoke{})
+	add(&FictionalMessage{})
+	add(&TextSorter{})
+	add(&NumberSorter{})
+	add(&FileCreation{})
+	add(&StartREPL{})
+	add(&REPLRound{})
+	add(&StopREPL{})
+	add(&YoutubeViewModel{})
+	return
+}
+
+func ChatWithOptions(c *Client, functionList []FunctionI, messages []Message) error {
 
 	reader := bufio.NewReader(os.Stdin)
 
@@ -46,19 +68,9 @@ func Chat(c *Client, prompts ...string) error {
 		}
 		funcs[name] = f
 	}
-	add(&SummationRequest{})
-	add(&ProductRequest{})
-	add(&Command{})
-	add(&SquareRoot{})
-	add(&RandomJoke{})
-	add(&FictionalMessage{})
-	add(&TextSorter{})
-	add(&NumberSorter{})
-	add(&FileCreation{})
-	add(&StartREPL{})
-	add(&REPLRound{})
-	add(&StopREPL{})
-	add(&YoutubeViewModel{})
+	for _, f := range functionList {
+		add(f)
+	}
 
 	for {
 
