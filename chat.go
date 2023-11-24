@@ -72,7 +72,11 @@ type ChatOptions struct {
 
 func ChatWithOptions(c *Client, o *ChatOptions) error {
 
-	reader := bufio.NewReader(os.Stdin)
+	var reader *bufio.Reader
+
+	if !o.OneRound {
+		reader = bufio.NewReader(os.Stdin)
+	}
 
 	var toolCall bool
 
@@ -100,7 +104,7 @@ func ChatWithOptions(c *Client, o *ChatOptions) error {
 			fmt.Printf("messages: %s\n", string(buf))
 		}
 
-		if !toolCall {
+		if !toolCall && !o.OneRound {
 			fmt.Print("> ")
 			text, err := reader.ReadString('\n')
 			if err == io.EOF {
