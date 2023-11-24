@@ -29,9 +29,17 @@ func Chat(c *Client, prompts ...string) error {
 	o := ChatOptions{
 		Functions:      StandardFuncs(),
 		Messages:       messages,
+		Model:          "gpt-4-1106-preview",
 		ResponseFormat: "text",
 	}
-	return ChatWithOptions(c, &o)
+	if err := ChatWithOptions(c, &o); err != nil {
+		return err
+	}
+	fmt.Println()
+	for _, m := range o.Messages {
+		fmt.Printf("%s: %s\n", m.Role, m.Content)
+	}
+	return nil
 }
 
 func StandardFuncs() (out []FunctionI) {
@@ -57,6 +65,8 @@ func StandardFuncs() (out []FunctionI) {
 type ChatOptions struct {
 	Functions      []FunctionI
 	Messages       []Message
+	Model          string
+	OneRound       bool
 	ResponseFormat string // text or json_object
 }
 
@@ -120,7 +130,8 @@ func ChatWithOptions(c *Client, o *ChatOptions) error {
 			},
 			//Model: "gpt-4",
 			//Model: "gpt-4-vision-preview",
-			Model:       "gpt-4-1106-preview",
+			//Model:       "gpt-4-1106-preview",
+			Model:       o.Model,
 			Messages:    o.Messages,
 			Temperature: 0.7,
 		}
@@ -179,6 +190,9 @@ func ChatWithOptions(c *Client, o *ChatOptions) error {
 
 		choice := r.Choices[0]
 		o.Messages = append(o.Messages, choice.Message)
+		if o.OneRound {
+			return nil
+		}
 		switch choice.FinishReason {
 		case "tool_calls":
 			toolCall = true
