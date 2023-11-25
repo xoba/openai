@@ -146,6 +146,7 @@ func (s SquareRoot) Run() (string, error) {
 
 type Command struct {
 	Line                   string
+	MaxOutputBytes         int
 	EchoStdoutToChatStream bool
 }
 
@@ -177,7 +178,8 @@ func (s Command) Run() (string, error) {
 	w := new(bytes.Buffer)
 	e := json.NewEncoder(w)
 	e.SetEscapeHTML(false)
-	if err := e.Encode(map[string]any{
+
+	output := map[string]any{
 		"error":               runError,
 		"exit_code":           cmd.ProcessState.ExitCode(),
 		"success":             cmd.ProcessState.Success(),
@@ -185,7 +187,18 @@ func (s Command) Run() (string, error) {
 		"user_time_seconds":   cmd.ProcessState.UserTime().Seconds(),
 		"stderr":              stderr.String(),
 		"stdout":              stdout.String(),
-	}); err != nil {
+	}
+
+	if stderr.Len() > s.MaxOutputBytes {
+		stderr.Truncate(s.MaxOutputBytes)
+		output["stderr truncated"] = true
+	}
+	if stdout.Len() > s.MaxOutputBytes {
+		stdout.Truncate(s.MaxOutputBytes)
+		output["stdout truncated"] = true
+	}
+
+	if err := e.Encode(output); err != nil {
 		return "", err
 	}
 	if s.EchoStdoutToChatStream {

@@ -34,6 +34,7 @@ func run() error {
 	}
 	var prompts []string
 	prompts = append(prompts, "remember, don't repeat a command's output if you've already echoed it to the user's terminal with EchoStdoutToChatStream=true.")
+	prompts = append(prompts, "you have a limited context window of 128k tokens, so make sure not to come close to exceeding that. for good measure, maybe limit output of all commands to 10k bytes, just in case.")
 	prompts = append(prompts, `
 	
 	You are Open Interpreter, a world-class programmer that can complete any goal by executing code.
