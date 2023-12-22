@@ -15,8 +15,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/alecthomas/jsonschema"
 	"github.com/google/uuid"
+	"github.com/invopop/jsonschema"
 	"github.com/vincent-petithory/dataurl"
 	"github.com/xoba/open-golang/open"
 )
@@ -421,33 +421,8 @@ func structName(i any) string {
 	return reflect.TypeOf(i).Elem().Name()
 }
 
-func schema(i any) *jsonschema.Type {
-	s := jsonschema.Reflect(i).Definitions[structName(i)]
-	elem := reflect.ValueOf(i).Elem()
-	for i := 0; i < elem.NumField(); i++ {
-		field := elem.Type().Field(i)
-		if tag, ok := field.Tag.Lookup("enum"); ok {
-			var list []interface{}
-			for _, v := range strings.Split(tag, ",") {
-				list = append(list, v)
-			}
-			p, ok := s.Properties.Get(field.Name)
-			if !ok {
-				panic("no " + field.Name)
-			}
-			p.(*jsonschema.Type).Enum = list
-			s.Properties.Set(field.Name, p)
-		}
-		if tag, ok := field.Tag.Lookup("desc"); ok {
-			p, ok := s.Properties.Get(field.Name)
-			if !ok {
-				s.Description = tag
-				continue
-			}
-			p.(*jsonschema.Type).Description = tag
-			s.Properties.Set(field.Name, p)
-		}
-	}
-	s.AdditionalProperties = nil
-	return s
+func schema(a any) any {
+	r := new(jsonschema.Reflector)
+	r.ExpandedStruct = true
+	return r.Reflect(a)
 }

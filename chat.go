@@ -55,10 +55,12 @@ func StandardFuncs() (out []FunctionI) {
 	add(&TextSorter{})
 	add(&NumberSorter{})
 	add(&FileCreation{})
-	add(&StartREPL{})
-	add(&REPLRound{})
-	add(&StopREPL{})
 	add(&YoutubeViewModel{})
+
+	// TODO: repl seems somewhat buggy
+	//add(&StartREPL{})
+	//add(&REPLRound{})
+	//add(&StopREPL{})
 	return
 }
 
