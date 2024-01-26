@@ -29,7 +29,7 @@ func Chat(c *Client, prompts ...string) error {
 	o := ChatOptions{
 		Functions:      StandardFuncs(),
 		Messages:       messages,
-		Model:          "gpt-4-1106-preview",
+		Model:          "gpt-4-turbo-preview",
 		ResponseFormat: "text",
 	}
 	if err := ChatWithOptions(c, &o); err != nil {
@@ -134,9 +134,6 @@ func ChatWithOptions(c *Client, o *ChatOptions) error {
 			ResponseFormat: &ResponseFormat{
 				Type: o.ResponseFormat,
 			},
-			//Model: "gpt-4",
-			//Model: "gpt-4-vision-preview",
-			//Model:       "gpt-4-1106-preview",
 			Model:       o.Model,
 			Messages:    o.Messages,
 			Temperature: 0.7,
