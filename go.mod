@@ -1,9 +1,9 @@
 module github.com/xoba/openai
 
-go 1.21.4
+go 1.22.0
 
 require (
-	github.com/google/uuid v1.5.0
+	github.com/google/uuid v1.6.0
 	github.com/invopop/jsonschema v0.12.0
 	github.com/vincent-petithory/dataurl v1.0.0
 	github.com/xoba/open-golang v1.0.0
